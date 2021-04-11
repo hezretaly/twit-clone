@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>{% if title %}{{ title }} - twit-clone{% else %}Welcome to twit-clone!{% endif %}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Bootstrap -->
+	<!-- CSS only -->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+	<style type="text/css">
+		.margin-bottom{
+			margin-bottom:15px;
+		}
+	</style>
+</head>
+<body>
+	<header class="p-3 bg-dark text-white">
+	  <div class="container">
+	    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+	      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+	        
+	      </a>
+
+	      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+	        <li><a href="{{ url_for('index') }}" class="nav-link px-2 text-secondary">Twit-clone</a></li>
+	        {% if current_user.is_anonymous %}
+
+	        {% else %}
+	        <li>
+	        	<a href="{{ url_for('user', username=current_user.username) }}" 
+	        		class="nav-link px-2 text-white">
+	        		Profile
+	        	</a>
+	        </li>
+	        <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+	        {% endif %}
+	      </ul>
+
+	      <!--
+	      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+	        <input type="search" class="form-control form-control-dark" placeholder="Search...">
+	      </form>
+	  		-->
+
+	      <div class="text-end">
+	      	{% if current_user.is_anonymous %}
+	        <button type="button" class="btn btn-outline-light me-2">Login</button>
+	        </button>
+	        {% else %}
+	        <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary">Log out</a>
+	        {% endif %}
+	      </div>
+	    </div>
+	  </div>
+	</header>
+	<div class="container mt-3">
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				<div class="alert alert-warning" role="alert">
+				  {{ message }}
+				</div>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+	</div>
+	<div class="container">
+		{% block content %}{% endblock %}
+	</div>
+</body>
+</html>

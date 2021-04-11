@@ -1,0 +1,7 @@
+# ignore postgresql tablespace folder
+PG_13_202007201/
+
+# readme.txt for now
+readme.txt
+
+.flaskenv

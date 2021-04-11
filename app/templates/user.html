@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <table>
+        <tr valign="top">
+            <td><img src="{% if current_user.avatar_img %}
+                {% set path = 'avatars/' + current_user.avatar_img %}
+                {{ url_for('static', filename=path) }}
+            {% else %}
+                    {{ user.avatar(128) }}
+            {% endif %} "></td>
+            <td>
+                <h1>User: {{ user.username }}</h1>
+                {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+                {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
+            </td>
+            <td>
+                <p><a href="{{ url_for('change_password') }}">change password</a></p>
+                <p><a href="{{ url_for('upload_image') }}">Upload avatar image</a></p>
+            </td>
+        </tr>
+    </table>
+    <hr>
+    {% for post in posts %}
+    <table>
+        <tr valign="top">
+            <td><img src="{{ post.author.avatar(36) }}"></td>
+            <td>{{ post.author.username }} says:<br>{{ post.body }}</td>
+        </tr>
+    </table>
+    {% endfor %}
+{% endblock %}
