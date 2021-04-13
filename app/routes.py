@@ -7,8 +7,8 @@ import os
 import uuid
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, ChangePasswordForm, \
-	ImageUploadForm
-from app.models import User
+	ImageUploadForm, EmptyForm, PostForm
+from app.models import User, Post
 
 
 @app.before_request
@@ -19,7 +19,6 @@ def before_request():
 
 @app.route('/')
 @app.route('/index')
-@login_required
 def index():
 	return render_template('index.html', title='Home Page')
 
@@ -59,11 +58,21 @@ def register():
 		return redirect(url_for('login'))
 	return render_template('register.html', title='Sign up', form=form)
 
-@app.route('/user/<username>')
+@app.route('/user/<username>', methods=['GET', 'POST'])
 @login_required
 def user(username):
 	user = User.query.filter_by(username=username).first_or_404()
-	return render_template('user.html', user=user)
+	post_form = PostForm()
+	if post_form.validate_on_submit():
+		post = Post(body=post_form.post.data, author=current_user)
+		db.session.add(post)
+		db.session.commit()
+		flash('Your blog is now live')
+		return redirect(url_for('user', username=current_user.username))
+	posts = user.posts.order_by(Post.timestamp.desc())
+	form = EmptyForm()
+	return render_template('user.html', user=user, form=form, post_form=post_form, \
+		posts=posts)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -94,10 +103,6 @@ def change_password():
 		return redirect(url_for('user', username=current_user.username))
 	return render_template('change_password.html', form=form)
 
-def allowed_file(filename):
-	return '.' in filename and \
-		filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 @app.route('/upload_image', methods=['GET', 'POST'])
 @login_required
 def upload_image():
@@ -114,3 +119,69 @@ def upload_image():
 		flash('Your image has been uploaded')
 		return redirect(url_for('user', username=current_user.username))
 	return render_template('upload_image.html', title='Upload Avatar', form=form)
+
+@app.route('/delete_image', methods=['POST'])
+@login_required
+def delete_image():
+	form = EmptyForm()
+	if form.validate_on_submit():
+		if current_user.avatar_img is None:
+			flash('You do not have a custom avatar image')
+			return redirect(url_for('user', username=current_user.username))
+		os.remove(os.path.join(app.config['UPLOAD_FOLDER'], 'avatars', current_user.avatar_img))
+		current_user.avatar_img = None
+		db.session.commit()
+		flash('Your picture has been deleted')
+		return redirect(url_for('user', username=current_user.username))
+	else:
+		return redirect(url_for('index'))
+
+@app.route('/follow/<username>', methods=['POST'])
+@login_required
+def follow(username):
+	form = EmptyForm()
+	if form.validate_on_submit():
+		user = User.query.filter_by(username=username).first()
+		if user is None:
+			flash(f'User {username} not found')
+			return redirect(url_for('index'))
+		if user == current_user:
+			flash('You cannot follow yourself!')
+			return redirect(url_for('user', username=username))
+		current_user.follow(user)
+		db.session.commit()
+		flash(f'You are now following {username}!')
+		return redirect(url_for('user', username=username))
+	else:
+		return redirect(url_for('index'))
+
+@app.route('/unfollow/<username>', methods=['POST'])
+@login_required
+def unfollow(username):
+	form = EmptyForm()
+	if form.validate_on_submit():
+		user = User.query.filter_by(username=username).first()
+		if user is None:
+			flash(f'User {username} not found')
+			return redirect(url_for('index'))
+		if user == current_user:
+			flash('You cannot follow yourself!')
+			return redirect(url_for('user', username=username))
+		current_user.unfollow(user)
+		db.session.commit()
+		flash(f'You are now following {username}!')
+		return redirect(url_for('user', username=username))
+	else:
+		return redirect(url_for('index'))
+
+@app.route('/explore')
+@login_required
+def explore():
+	posts = Post.query.order_by(Post.timestamp.desc())
+	return render_template('explore.html', title='Explore', posts=posts)
+
+@app.route('/my_feed')
+@login_required
+def my_feed():
+	posts = current_user.followed_posts()
+	return render_template('my_feed.html', title='Feed', posts=posts)

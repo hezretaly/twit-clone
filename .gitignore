@@ -5,3 +5,6 @@ PG_13_202007201/
 readme.txt
 
 .flaskenv
+
+# Not necessary?
+tests.py

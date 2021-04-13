@@ -7,10 +7,6 @@
 	<!-- Bootstrap -->
 	<!-- CSS only -->
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
-	<style type="text/css">
-		.margin-bottom{
-			margin-bottom:15px;
-		}
 	</style>
 </head>
 <body>
@@ -32,7 +28,13 @@
 	        		Profile
 	        	</a>
 	        </li>
-	        <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+	        <li>
+	        	<a href="{{ url_for('explore') }}" 
+	        	class="nav-link px-2 text-white">Explore</a>
+	        </li>
+	        <li>
+	        	<a href="{{ url_for('my_feed') }}" class="nav-link px-2 text-white">Feed</a>
+	        </li>
 	        {% endif %}
 	      </ul>
 
@@ -44,8 +46,7 @@
 
 	      <div class="text-end">
 	      	{% if current_user.is_anonymous %}
-	        <button type="button" class="btn btn-outline-light me-2">Login</button>
-	        </button>
+	        <a href="{{ url_for('login') }}" class="btn btn-outline-light me-2">Login</a>
 	        {% else %}
 	        <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary">Log out</a>
 	        {% endif %}
@@ -67,5 +68,11 @@
 	<div class="container">
 		{% block content %}{% endblock %}
 	</div>
+
+
+	{{ moment.include_jquery() }}
+	{{ moment.include_moment() }}
+
+
 </body>
 </html>
