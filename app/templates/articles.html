@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="display-5">Articles</h1>
+    <hr>
+    {% for article in articles %}
+        {% include "_header_articles.html" %}
+    {% endfor %}
+{% endblock %}

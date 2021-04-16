@@ -20,6 +20,7 @@
                     <p><a href="{{ url_for('edit_profile') }}">Edit Profile</a></p>
                     <p><a href="{{ url_for('change_password') }}">change password</a></p>
                     <p><a href="{{ url_for('upload_image') }}">Upload avatar image</a></p>
+                    <p><a href="{{ url_for('create_article') }}">Create an article</a></p>
                     {% if current_user.avatar_img %}
                     <p>
                         <form action="{{ url_for('delete_image') }}" method="post">

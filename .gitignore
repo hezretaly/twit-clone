@@ -4,7 +4,13 @@ PG_13_202007201/
 # readme.txt for now
 readme.txt
 
+# I replaced it with dotenv(python)
+# So you have to include dotenv(.env) in root directory
 .flaskenv
 
 # Not necessary?
 tests.py
+
+# ignore the environment
+# this file
+.env

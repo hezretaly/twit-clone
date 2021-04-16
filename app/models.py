@@ -24,6 +24,7 @@ class User(UserMixin, db.Model):
         primaryjoin=(followers.c.follower_id == id),
         secondaryjoin=(followers.c.followed_id == id),
         backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
+    articles = db.relationship('Article', backref='author', lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -77,6 +78,15 @@ class Post(db.Model):
 #    def __repr__(self):
 #        return '<PostPhoto {}>'.format(self.path)
 
+class Article(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    header = db.Column(db.String(64))
+    body = db.Column(db.String(1024))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return '<Article {}>'.format(self.header)
 
 @login.user_loader
 def load_user(id):

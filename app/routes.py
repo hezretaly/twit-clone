@@ -7,8 +7,8 @@ import os
 import uuid
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, ChangePasswordForm, \
-	ImageUploadForm, EmptyForm, PostForm
-from app.models import User, Post
+	ImageUploadForm, EmptyForm, PostForm, ArticleForm
+from app.models import User, Post, Article
 
 
 @app.before_request
@@ -185,3 +185,41 @@ def explore():
 def my_feed():
 	posts = current_user.followed_posts()
 	return render_template('my_feed.html', title='Feed', posts=posts)
+
+# articleList
+@app.route('/articles')
+def articles():
+	articles = Article.query.order_by(Article.timestamp.desc())
+	return render_template('articles.html', title='Articles', articles=articles)
+
+@app.route('/create_article', methods=['GET', 'POST'])
+@login_required
+def create_article():
+	form = ArticleForm()
+	if form.validate_on_submit():
+		article = Article(header=form.header.data, body=form.body.data, author=current_user)
+		db.session.add(article)
+		db.session.commit()
+		flash('Your article is now live!')
+		return redirect(url_for('articles'))
+	return render_template('edit_article.html', title='Article', form=form)
+
+# articleEdit
+@app.route('/edit_article/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_article(id):
+	article = Article.query.get_or_404(id)
+	form = ArticleForm()
+	if form.validate_on_submit():
+		article.header = form.header.data
+		article.body = form.body.data
+		db.session.commit()
+	elif request.method == 'GET':
+		form.header.data = article.header
+		form.body.data = article.body
+	return render_template('edit_article.html', title='Edit Article', form=form)
+
+@app.route('/article/<int:id>')
+def article(id):
+	article = Article.query.get_or_404(id)
+	return render_template('article.html', title='Article', article=article)

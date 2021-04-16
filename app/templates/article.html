@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1 class="display-5">{{ article.header }}</h1>
+	<p>
+		{{ article.body }}
+	</p>
+	<p>
+		Written by <a href="{{ url_for('user', username=article.author.username) }}">
+		{{ article.author.username }}</a>
+	</p>
+{% endblock %}

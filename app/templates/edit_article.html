@@ -1,32 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h1 class="display-5">Edit Profile</h1>
+	<h1 class="display-5">Post an article</h1>
 	<form action="" method="post">
         {{ form.hidden_tag() }}
         <div class="col-lg-6">
         <div class="mb-3">
-		  {{ form.username.label(class_='form-label') }}
-			<div class="input-group">
-		      <span class="input-group-text">@</span>
-		      {{ form.username(class_='form-control') }}
-		    </div>
-          {% for error in form.username.errors %}
+		  {{ form.header.label(class_='form-label') }}
+	      {{ form.header(class_='form-control', row='2') }}
+          {% for error in form.header.errors %}
         	<div class="text-danger">
 		    	{{ error }}
 		    </div>
           {% endfor %}
 	    </div>
+		</div>
 	    <div class="mb-3">
-	      {{ form.about_me.label(class_='form-label') }}
-	      {{ form.about_me(class_='form-control', row='3') }}
-	      {% for error in form.about_me.errors %}
+	      {{ form.body.label(class_='form-label') }}
+	      {{ form.body(class_='form-control', rows=10) }}
+	      {% for error in form.body.errors %}
         	<div class="text-danger">
 		    	{{ error }}
 		    </div>
           {% endfor %}
 	    </div>
         {{ form.submit(class_='btn btn-primary') }}
-        </div>
     </form>
 {% endblock %}
