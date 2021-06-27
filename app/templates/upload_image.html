@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1 class="display-5">Upload avatar image</h1>
+    <h1 class="display-5">{{ _('Upload avatar image') }}</h1>
     <form method="post" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <div class="col-lg-6">
@@ -12,7 +12,7 @@
               {{ error }}
             </div>
           {% endfor %}
-          <p>Image shouldn't exceed 1MB(megabyte)</p>
+          <p>{{ _('Image shouldn\'t exceed 1MB(megabyte)') }}</p>
         </div>
         {{ form.submit(class_='btn btn-primary') }}
         </div>

@@ -1,5 +1,6 @@
 from flask import render_template, url_for, redirect, flash, request
 from flask_login import current_user, login_user, logout_user, login_required
+from flask_babel import _
 from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
 from datetime import datetime
@@ -7,8 +8,10 @@ import os
 import uuid
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, ChangePasswordForm, \
-	ImageUploadForm, EmptyForm, PostForm, ArticleForm
+	ImageUploadForm, EmptyForm, PostForm, ArticleForm, ResetPasswordRequestForm, \
+	ResetPasswordForm
 from app.models import User, Post, Article
+from app.email import send_password_reset_email
 
 
 @app.before_request
@@ -30,7 +33,7 @@ def login():
 	if form.validate_on_submit():
 		user = User.query.filter_by(username=form.username.data).first()
 		if user is None or not user.check_password(form.password.data):
-			flash('Invalid username or password')
+			flash(_('Invalid username or password'))
 			return redirect(url_for('login'))
 		login_user(user, remember=form.remember_me.data)
 		next_page = request.args.get('next')
@@ -54,7 +57,7 @@ def register():
 		user.set_password(form.password.data)
 		db.session.add(user)
 		db.session.commit()
-		flash('You have been registered!')
+		flash(_('You have been registered!'))
 		return redirect(url_for('login'))
 	return render_template('register.html', title='Sign up', form=form)
 
@@ -67,7 +70,7 @@ def user(username):
 		post = Post(body=post_form.post.data, author=current_user)
 		db.session.add(post)
 		db.session.commit()
-		flash('Your blog is now live')
+		flash(_('Your blog is now live'))
 		return redirect(url_for('user', username=current_user.username))
 	posts = user.posts.order_by(Post.timestamp.desc())
 	form = EmptyForm()
@@ -82,7 +85,7 @@ def edit_profile():
 		current_user.username = form.username.data
 		current_user.about_me = form.about_me.data
 		db.session.commit()
-		flash('Your changes were saved')
+		flash(_('Your changes were saved'))
 		return redirect(url_for('edit_profile'))
 	elif request.method == 'GET':
 		form.username.data = current_user.username
@@ -95,11 +98,11 @@ def change_password():
 	form = ChangePasswordForm()
 	if form.validate_on_submit():
 		if not current_user.check_password(form.password.data):
-			flash('Wrong Password')
+			flash(_('Wrong Password'))
 			return redirect(url_for('change_password'))
 		current_user.set_password(form.password_new.data)
 		db.session.commit()
-		flash('Your password has been changed')
+		flash(_('Your password has been changed'))
 		return redirect(url_for('user', username=current_user.username))
 	return render_template('change_password.html', form=form)
 
@@ -116,7 +119,7 @@ def upload_image():
 		current_user.avatar_img = filename
 		image.save(os.path.join(app.config['UPLOAD_FOLDER'], 'avatars', filename))
 		db.session.commit()
-		flash('Your image has been uploaded')
+		flash(_('Your image has been uploaded'))
 		return redirect(url_for('user', username=current_user.username))
 	return render_template('upload_image.html', title='Upload Avatar', form=form)
 
@@ -126,12 +129,12 @@ def delete_image():
 	form = EmptyForm()
 	if form.validate_on_submit():
 		if current_user.avatar_img is None:
-			flash('You do not have a custom avatar image')
+			flash(_('You do not have a custom avatar image'))
 			return redirect(url_for('user', username=current_user.username))
 		os.remove(os.path.join(app.config['UPLOAD_FOLDER'], 'avatars', current_user.avatar_img))
 		current_user.avatar_img = None
 		db.session.commit()
-		flash('Your picture has been deleted')
+		flash(_('Your picture has been deleted'))
 		return redirect(url_for('user', username=current_user.username))
 	else:
 		return redirect(url_for('index'))
@@ -143,14 +146,14 @@ def follow(username):
 	if form.validate_on_submit():
 		user = User.query.filter_by(username=username).first()
 		if user is None:
-			flash(f'User {username} not found')
+			flash(_('User %(username)s not found', username=username))
 			return redirect(url_for('index'))
 		if user == current_user:
-			flash('You cannot follow yourself!')
+			flash(_('You cannot follow yourself!'))
 			return redirect(url_for('user', username=username))
 		current_user.follow(user)
 		db.session.commit()
-		flash(f'You are now following {username}!')
+		flash(_('You are now following %(username)s!', username=username))
 		return redirect(url_for('user', username=username))
 	else:
 		return redirect(url_for('index'))
@@ -162,14 +165,14 @@ def unfollow(username):
 	if form.validate_on_submit():
 		user = User.query.filter_by(username=username).first()
 		if user is None:
-			flash(f'User {username} not found')
+			flash(_('User %(username)s not found', username=username))
 			return redirect(url_for('index'))
 		if user == current_user:
-			flash('You cannot follow yourself!')
+			flash(_('You cannot unfollow yourself!'))
 			return redirect(url_for('user', username=username))
 		current_user.unfollow(user)
 		db.session.commit()
-		flash(f'You are now following {username}!')
+		flash(_('You are now following %(username)s!', username=username))
 		return redirect(url_for('user', username=username))
 	else:
 		return redirect(url_for('index'))
@@ -200,7 +203,7 @@ def create_article():
 		article = Article(header=form.header.data, body=form.body.data, author=current_user)
 		db.session.add(article)
 		db.session.commit()
-		flash('Your article is now live!')
+		flash(_('Your article is now live!'))
 		return redirect(url_for('articles'))
 	return render_template('edit_article.html', title='Article', form=form)
 
@@ -223,3 +226,37 @@ def edit_article(id):
 def article(id):
 	article = Article.query.get_or_404(id)
 	return render_template('article.html', title='Article', article=article)
+
+@app.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+	if current_user.is_authenticated:
+		return redirect(url_for('index'))
+	form = ResetPasswordRequestForm()
+	if form.validate_on_submit():
+		user = User.query.filter_by(email = form.username.data).first() or \
+			User.query.filter_by(username = form.username.data).first()
+		if user:
+			send_password_reset_email(user)
+			flash(_('Check your E-mail for the instructions to reset your password'))
+			return redirect(url_for('login'))
+		flash(_('Check if your information is correct'))
+		return redirect(url_for('reset_password_request'))
+	return render_template('reset_password_request.html', title='Reset Password', form=form)
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+	if current_user.is_authenticated:
+		return redirect(url_for('index'))
+	user = User.verify_reset_password_token(token)
+	print(user)
+	if not user:
+		flash(_('Coud not find credentials'))
+		return redirect(url_for('index'))
+	form = ResetPasswordForm()
+	if form.validate_on_submit():
+		user.set_password(form.password.data)
+		db.session.commit()
+		flash(_('Password has been reset.'))
+		return redirect(url_for('login'))
+	return render_template('reset_password.html', form=form)
+

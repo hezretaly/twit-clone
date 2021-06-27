@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1 class="display-5">Explore the opinions, ideas and more...</h1>
+    <h1 class="display-5">{{ _('Explore the opinions, ideas and more...') }}</h1>
     <hr>
     {% for post in posts %}
         {% include "_post.html" %}

@@ -1,0 +1,296 @@
+# Chinese translations for PROJECT.
+# Copyright (C) 2021 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2021-06-28 02:02+0500\n"
+"PO-Revision-Date: 2021-06-28 01:35+0500\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh\n"
+"Language-Team: zh <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.0\n"
+
+#: app/email.py:21
+msgid "Twit-Clone -- Reset Your Passwrod"
+msgstr "Twit-Clone -- 重置你的密码"
+
+#: app/forms.py:10 app/forms.py:16 app/forms.py:34
+msgid "Username"
+msgstr "用户名"
+
+#: app/forms.py:11 app/forms.py:18 app/forms.py:79
+msgid "Password"
+msgstr "密码"
+
+#: app/forms.py:12
+msgid "Remember me"
+msgstr "记住我"
+
+#: app/forms.py:13
+msgid "Sign in"
+msgstr "登录"
+
+#: app/forms.py:17
+msgid "Email"
+msgstr "电子邮件"
+
+#: app/forms.py:19 app/forms.py:80
+msgid "Repeat Password"
+msgstr "重复密码"
+
+#: app/forms.py:20 app/forms.py:52
+msgid "Passwords must match"
+msgstr "密码必须匹配"
+
+#: app/forms.py:21
+msgid "Register"
+msgstr "注册"
+
+#: app/forms.py:26
+msgid "Please use a different name"
+msgstr "请使用不同的名字"
+
+#: app/forms.py:31
+msgid "Please use a different email"
+msgstr "请使用不同的邮箱"
+
+#: app/forms.py:35
+msgid "About me"
+msgstr "关于我"
+
+#: app/forms.py:36 app/forms.py:53 app/forms.py:63 app/forms.py:67
+msgid "Submit"
+msgstr "提交"
+
+#: app/forms.py:49
+msgid "Current Password"
+msgstr "当前密码"
+
+#: app/forms.py:50
+msgid "New Password"
+msgstr "新密码"
+
+#: app/forms.py:51
+msgid "Repeat New Password"
+msgstr "重复新密码"
+
+#: app/forms.py:56
+msgid "Image"
+msgstr "图片"
+
+#: app/forms.py:60
+msgid "Upload image"
+msgstr "上传图片"
+
+#: app/forms.py:66
+msgid "Say something"
+msgstr "说点什么"
+
+#: app/forms.py:70
+msgid "Header"
+msgstr "标题"
+
+#: app/forms.py:71
+msgid "Main area"
+msgstr "主要区域"
+
+#: app/forms.py:72
+msgid "Post"
+msgstr "帖子"
+
+#: app/forms.py:75
+msgid "Username or Email"
+msgstr "用户名或电子邮件"
+
+#: app/forms.py:76 app/templates/reset_password_request.html:4
+msgid "Request Password Reset"
+msgstr "请求密码重置"
+
+#: app/forms.py:81
+msgid "Passwords should match"
+msgstr "密码应该匹配"
+
+#: app/forms.py:82 app/templates/reset_password.html:4
+msgid "Reset Password"
+msgstr "重设密码"
+
+#: app/routes.py:36
+msgid "Invalid username or password"
+msgstr "无效的用户名或密码"
+
+#: app/routes.py:60
+msgid "You have been registered!"
+msgstr "您已注册！"
+
+#: app/routes.py:73
+msgid "Your blog is now live"
+msgstr "您的博客现已上线"
+
+#: app/routes.py:88
+msgid "Your changes were saved"
+msgstr "您的更改已保存"
+
+#: app/routes.py:101
+msgid "Wrong Password"
+msgstr "错误的密码"
+
+#: app/routes.py:105
+msgid "Your password has been changed"
+msgstr "您的密码已被更改"
+
+#: app/routes.py:122
+msgid "Your image has been uploaded"
+msgstr "您的图片已上传"
+
+#: app/routes.py:132
+msgid "You do not have a custom avatar image"
+msgstr "您没有自定义头像"
+
+#: app/routes.py:137
+msgid "Your picture has been deleted"
+msgstr "您的图片已被删除"
+
+#: app/routes.py:149 app/routes.py:168
+#, python-format
+msgid "User %(username)s not found"
+msgstr "未找到用户 %(username)s"
+
+#: app/routes.py:152
+msgid "You cannot follow yourself!"
+msgstr "你不能跟随自己！"
+
+#: app/routes.py:156 app/routes.py:175
+#, python-format
+msgid "You are now following %(username)s!"
+msgstr "您现在正在关注 %(username)s！"
+
+#: app/routes.py:171
+msgid "You cannot unfollow yourself!"
+msgstr "您不能取消关注自己！"
+
+#: app/routes.py:206
+msgid "Your article is now live!"
+msgstr "您的文章现已上线！"
+
+#: app/routes.py:240
+msgid "Check your E-mail for the instructions to reset your password"
+msgstr "检查您的电子邮件以获取重置密码的说明"
+
+#: app/routes.py:242
+msgid "Check if your information is correct"
+msgstr "检查您的信息是否正确"
+
+#: app/routes.py:253
+msgid "Coud not find credentials"
+msgstr "无法找到凭据"
+
+#: app/routes.py:259
+msgid "Password has been reset."
+msgstr "密码已被重置。"
+
+#: app/templates/500.html:4
+msgid "Unexpected error occured while processing the request"
+msgstr "处理请求时出现意外错误"
+
+#: app/templates/500.html:5
+msgid "The administrator has been notified. Sorry for the inconvenience!"
+msgstr "已通知管理员。抱歉给您带来不便！"
+
+#: app/templates/500.html:6
+msgid "Back"
+msgstr "返回"
+
+#: app/templates/articles.html:4 app/templates/base.html:45
+msgid "Articles"
+msgstr "文章"
+
+#: app/templates/base.html:38
+msgid "Explore"
+msgstr "探索"
+
+#: app/templates/base.html:41
+msgid "Feed"
+msgstr "饲料"
+
+#: app/templates/base.html:57
+msgid "Login"
+msgstr "登录"
+
+#: app/templates/base.html:59
+msgid "Log out"
+msgstr "注销"
+
+#: app/templates/change_password.html:4
+msgid "Change Password"
+msgstr "更改密码"
+
+#: app/templates/edit_article.html:4
+msgid "Post an article"
+msgstr "发表文章"
+
+#: app/templates/edit_profile.html:4
+msgid "Edit Profile"
+msgstr "编辑个人资料"
+
+#: app/templates/explore.html:4
+msgid "Explore the opinions, ideas and more..."
+msgstr "探索意见、想法和更多..."
+
+#: app/templates/index.html:10
+msgid "Welcome to"
+msgstr "欢迎来到"
+
+#: app/templates/index.html:10
+msgid "twit-clone"
+msgstr "twit-clone"
+
+#: app/templates/index.html:12
+msgid ""
+"Place where you can express your opinions and see what others think about"
+" it."
+msgstr "在这里你可以表达你的意见，看看别人怎么想。"
+
+#: app/templates/index.html:16 app/templates/register.html:4
+msgid "Sign up"
+msgstr "注册"
+
+#: app/templates/login.html:4
+msgid "Sign In"
+msgstr "登录"
+
+#: app/templates/login.html:33
+msgid "New here?"
+msgstr "新来的？"
+
+#: app/templates/login.html:33
+msgid "Sign up!"
+msgstr "注册！"
+
+#: app/templates/login.html:35
+msgid "Forgot your password?"
+msgstr "忘记密码？"
+
+#: app/templates/login.html:36
+msgid "Reset it"
+msgstr "重置它"
+
+#: app/templates/my_feed.html:4
+msgid "Your Feed"
+msgstr "你的供稿"
+
+#: app/templates/upload_image.html:4
+msgid "Upload avatar image"
+msgstr "上传头像图片"
+
+#: app/templates/upload_image.html:15
+msgid "Image shouldn't exceed 1MB(megabyte)"
+msgstr "图像不应超过 1MB(兆字节)"
+

@@ -35,14 +35,14 @@
 	        </li>
 	        <li>
 	        	<a href="{{ url_for('explore') }}" 
-	        	class="nav-link px-2 text-white">Explore</a>
+	        	class="nav-link px-2 text-white">{{ _('Explore') }}</a>
 	        </li>
 	        <li>
-	        	<a href="{{ url_for('my_feed') }}" class="nav-link px-2 text-white">Feed</a>
+	        	<a href="{{ url_for('my_feed') }}" class="nav-link px-2 text-white">{{ _('Feed') }}</a>
 	        </li>
 	        {% endif %}
 	        <li>
-        		<a href="{{ url_for('articles') }}" class="nav-link px-2 text-white">Articles</a>
+        		<a href="{{ url_for('articles') }}" class="nav-link px-2 text-white">{{ _('Articles') }}</a>
         	</li>
 	      </ul>
 
@@ -54,9 +54,9 @@
 
 	      <div class="text-end">
 	      	{% if current_user.is_anonymous %}
-	        <a href="{{ url_for('login') }}" class="btn btn-outline-light me-2">Login</a>
+	        <a href="{{ url_for('login') }}" class="btn btn-outline-light me-2">{{ _('Login') }}</a>
 	        {% else %}
-	        <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary">Log out</a>
+	        <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary">{{ _('Log out') }}</a>
 	        {% endif %}
 	      </div>
 	    </div>

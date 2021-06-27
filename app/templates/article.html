@@ -7,6 +7,7 @@
 	</p>
 	<p>
 		Written by <a href="{{ url_for('user', username=article.author.username) }}">
-		{{ article.author.username }}</a>
+		{{ article.author.username }}</a> on
+		{{ moment(article.timestamp).format('LL') }}
 	</p>
 {% endblock %}

@@ -7,10 +7,14 @@
 	      <img src="{{ url_for('static', filename='friends.png') }}" class="d-block mx-lg-auto img-fluid" alt="Friends hugging" width="700" height="500" loading="lazy">
 	    </div>
 	    <div class="col-lg-6">
-	      <h1 class="display-5 fw-bold lh-1 mb-3">Welcome to<br> twit-clone</h1>
-	      <p class="lead">Place where you can express your opinions and see what others think about it.</p>
+	      <h1 class="display-5 fw-bold lh-1 mb-3">{{ _('Welcome to') }}<br> {{ _('twit-clone') }}</h1>
+	      <p class="lead">
+	    	{{ _('Place where you can express your opinions and see what others think about it.') }}
+	      </p>
 	      <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-	        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg px-4 me-md-2">Sign up</a>
+	        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg px-4 me-md-2">
+	        	{{ _('Sign up') }}
+	        </a>
 	      </div>
 	    </div>
 	  </div>
