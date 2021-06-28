@@ -30,7 +30,7 @@
 	        <li>
 	        	<a href="{{ url_for('user', username=current_user.username) }}" 
 	        		class="nav-link px-2 text-white">
-	        		Profile
+	        		{{ _('Profile') }}
 	        	</a>
 	        </li>
 	        <li>
@@ -46,11 +46,11 @@
         	</li>
 	      </ul>
 
-	      <!--
-	      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-	        <input type="search" class="form-control form-control-dark" placeholder="Search...">
+	      {% if g.search_form %}
+	      <form method="get" action="{{ url_for('search') }}" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+	      	{{ g.search_form.q(class_="form-control form-control-dark",  placeholder=g.search_form.q.label.text)}}
 	      </form>
-	  		-->
+	  	  {% endif %}
 
 	      <div class="text-end">
 	      	{% if current_user.is_anonymous %}

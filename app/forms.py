@@ -1,3 +1,4 @@
+from flask import request
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
@@ -80,3 +81,13 @@ class ResetPasswordForm(FlaskForm):
 	password2 = PasswordField(_l('Repeat Password'),
 		validators=[DataRequired(), EqualTo('password', message=_l('Passwords should match'))])
 	submit = SubmitField(_l('Reset Password'))
+
+class SearchForm(FlaskForm):
+	q = StringField(_l('Search'), validators=[DataRequired()])
+
+	def __init__(self, *args, **kwargs):
+		if 'formdata' not in kwargs:
+			kwargs['formdata'] = request.args
+		if 'csrf_enabled' not in kwargs:
+			kwargs['csrf_enabled'] = False
+		super(SearchForm, self).__init__(*args, **kwargs)

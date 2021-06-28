@@ -7,6 +7,7 @@ import logging
 from logging.handlers import SMTPHandler
 from flask_mail import Mail
 from flask_babel import Babel
+from elasticsearch import Elasticsearch
 
 
 from config import Config
@@ -37,6 +38,11 @@ if not app.debug:
 		)
 		mail_handler.setLevel(logging.ERROR)
 		app.logger.addHandler(mail_handler)
+
+app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
+		if app.config['ELASTICSEARCH_URL'] else None
+
+
 
 @babel.localeselector
 def get_locale():

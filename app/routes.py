@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, flash, request
+from flask import render_template, url_for, redirect, flash, request, g
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_babel import _
 from werkzeug.urls import url_parse
@@ -9,7 +9,7 @@ import uuid
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, ChangePasswordForm, \
 	ImageUploadForm, EmptyForm, PostForm, ArticleForm, ResetPasswordRequestForm, \
-	ResetPasswordForm
+	ResetPasswordForm, SearchForm
 from app.models import User, Post, Article
 from app.email import send_password_reset_email
 
@@ -19,6 +19,8 @@ def before_request():
 	if current_user.is_authenticated:
 		current_user.last_seen = datetime.utcnow()
 		db.session.commit()
+		g.search_form = SearchForm()
+
 
 @app.route('/')
 @app.route('/index')
@@ -260,3 +262,12 @@ def reset_password(token):
 		return redirect(url_for('login'))
 	return render_template('reset_password.html', form=form)
 
+@app.route('/search')
+@login_required
+def search():
+	if not g.search_form.validate():
+		return redirect(url_for('main.explore'))
+	posts, total = Post.search(g.search_form.q.data, 1, 10)
+	print(posts.all())
+	print('did the posts get printed to the screen?')
+	return render_template('search.html', title=_('Search'), posts=posts, total=total)
