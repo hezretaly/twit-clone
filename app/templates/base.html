@@ -47,9 +47,17 @@
 	      </ul>
 
 	      {% if g.search_form %}
-	      <form method="get" action="{{ url_for('search') }}" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-	      	{{ g.search_form.q(class_="form-control form-control-dark",  placeholder=g.search_form.q.label.text)}}
-	      </form>
+	      	{% if request.path == '/articles' or request.path == '/search_article' %}
+	      		<form method="get" action="{{ url_for('search_article') }}" 
+	      				class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+		      	{{ g.search_form.q(class_="form-control form-control-dark",  placeholder=g.search_form.q.label.text)}}
+		      </form>
+		    {% else %}
+		      <form method="get" action="{{ url_for('search') }}" 
+		      		class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+		      	{{ g.search_form.q(class_="form-control form-control-dark",  placeholder=g.search_form.q.label.text)}}
+		      </form>
+		    {% endif %}
 	  	  {% endif %}
 
 	      <div class="text-end">

@@ -149,6 +149,20 @@ class Article(SearchableMixin, db.Model):
     def __repr__(self):
         return '<Article {}>'.format(self.header)
 
+class Request(db.Model):
+    id = db.Column(db.BigInteger, primary_key=True)
+    path = db.Column(db.String(255))
+    method = db.Column(db.String(8))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    browser = db.Column(db.String(20))
+    platform = db.Column(db.String(20))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    status_code = db.Column(db.Integer)
+    response_time = db.Column(db.Float)
+
+    def __repr__(self):
+        return '<Request {}>'.format(self.path)
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))

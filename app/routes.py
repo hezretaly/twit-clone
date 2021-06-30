@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, flash, request, g
+from flask import render_template, url_for, redirect, flash, request, g, Response
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_babel import _
 from werkzeug.urls import url_parse
@@ -6,21 +6,34 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
 import uuid
+import time
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, ChangePasswordForm, \
 	ImageUploadForm, EmptyForm, PostForm, ArticleForm, ResetPasswordRequestForm, \
 	ResetPasswordForm, SearchForm
-from app.models import User, Post, Article
+from app.models import User, Post, Article, Request
 from app.email import send_password_reset_email
 
 
 @app.before_request
 def before_request():
+	g.request_start=time.perf_counter()
+	g.request = Request(path=request.path, method=request.method, browser=request.user_agent.browser,
+					platform=request.user_agent.platform)
 	if current_user.is_authenticated:
 		current_user.last_seen = datetime.utcnow()
 		db.session.commit()
 		g.search_form = SearchForm()
+		g.request.user_id=current_user.id
 
+
+@app.after_request
+def after_request(response):
+	g.request.status_code=response.status_code
+	g.request.response_time=time.perf_counter() - g.request_start
+	db.session.add(g.request)
+	db.session.commit()
+	return response
 
 @app.route('/')
 @app.route('/index')
@@ -266,8 +279,38 @@ def reset_password(token):
 @login_required
 def search():
 	if not g.search_form.validate():
-		return redirect(url_for('main.explore'))
+		return redirect(url_for('explore'))
 	posts, total = Post.search(g.search_form.q.data, 1, 10)
-	print(posts.all())
-	print('did the posts get printed to the screen?')
-	return render_template('search.html', title=_('Search'), posts=posts, total=total)
+	return render_template('search.html', title=_('Search'), posts=posts)
+
+@app.route('/search_article')
+@login_required
+def search_article():
+	if not g.search_form.validate():
+		return redirect(url_for('articles'))
+	articles, total = Article.search(g.search_form.q.data, 1, 10)
+	return render_template('search.html', title=_('Search Articles'), articles=articles)
+
+@app.route('/stats/total_hits')
+@login_required
+def total_hits():
+	result = db.engine.execute("select distinct path, count(path) from request group by path")
+	path=[]
+	hits=[]
+	total = Request.query.all()
+	for row in result:
+		path.append(row['path'])
+		hits.append(row['count'])
+	maximum = max(hits)
+	return render_template('total_hits.html', title=_('Total page visits'), 
+			paths=path, hits=hits, total=len(total), max=maximum)
+
+
+
+
+
+
+
+
+
+
