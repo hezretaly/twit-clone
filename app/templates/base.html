@@ -23,37 +23,37 @@
 	      </a>
 
 	      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-	        <li><a href="{{ url_for('index') }}" class="nav-link px-2 text-secondary">Twit-clone</a></li>
+	        <li><a href="{{ url_for('main.index') }}" class="nav-link px-2 text-secondary">Twit-clone</a></li>
 	        {% if current_user.is_anonymous %}
 	        
 	        {% else %}
 	        <li>
-	        	<a href="{{ url_for('user', username=current_user.username) }}" 
+	        	<a href="{{ url_for('main.user', username=current_user.username) }}" 
 	        		class="nav-link px-2 text-white">
 	        		{{ _('Profile') }}
 	        	</a>
 	        </li>
 	        <li>
-	        	<a href="{{ url_for('explore') }}" 
+	        	<a href="{{ url_for('main.explore') }}" 
 	        	class="nav-link px-2 text-white">{{ _('Explore') }}</a>
 	        </li>
 	        <li>
-	        	<a href="{{ url_for('my_feed') }}" class="nav-link px-2 text-white">{{ _('Feed') }}</a>
+	        	<a href="{{ url_for('main.my_feed') }}" class="nav-link px-2 text-white">{{ _('Feed') }}</a>
 	        </li>
 	        {% endif %}
 	        <li>
-        		<a href="{{ url_for('articles') }}" class="nav-link px-2 text-white">{{ _('Articles') }}</a>
+        		<a href="{{ url_for('main.articles') }}" class="nav-link px-2 text-white">{{ _('Articles') }}</a>
         	</li>
 	      </ul>
 
 	      {% if g.search_form %}
 	      	{% if request.path == '/articles' or request.path == '/search_article' %}
-	      		<form method="get" action="{{ url_for('search_article') }}" 
+	      		<form method="get" action="{{ url_for('main.search_article') }}" 
 	      				class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
 		      	{{ g.search_form.q(class_="form-control form-control-dark",  placeholder=g.search_form.q.label.text)}}
 		      </form>
 		    {% else %}
-		      <form method="get" action="{{ url_for('search') }}" 
+		      <form method="get" action="{{ url_for('main.search') }}" 
 		      		class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
 		      	{{ g.search_form.q(class_="form-control form-control-dark",  placeholder=g.search_form.q.label.text)}}
 		      </form>
@@ -62,9 +62,9 @@
 
 	      <div class="text-end">
 	      	{% if current_user.is_anonymous %}
-	        <a href="{{ url_for('login') }}" class="btn btn-outline-light me-2">{{ _('Login') }}</a>
+	        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light me-2">{{ _('Login') }}</a>
 	        {% else %}
-	        <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary">{{ _('Log out') }}</a>
+	        <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-secondary">{{ _('Log out') }}</a>
 	        {% endif %}
 	      </div>
 	    </div>

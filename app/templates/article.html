@@ -6,7 +6,7 @@
 		{{ article.body }}
 	</p>
 	<p>
-		Written by <a href="{{ url_for('user', username=article.author.username) }}">
+		Written by <a href="{{ url_for('main.user', username=article.author.username) }}">
 		{{ article.author.username }}</a> on
 		{{ moment(article.timestamp).format('LL') }}
 	</p>

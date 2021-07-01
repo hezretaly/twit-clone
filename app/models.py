@@ -1,11 +1,12 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from flask import current_app
 from hashlib import md5
 from time import time
 import jwt
 
-from app import db, login, app
+from app import db, login
 from app.search import add_to_index, remove_from_index, query_index
 
 class SearchableMixin(object):
@@ -46,9 +47,9 @@ class SearchableMixin(object):
         for obj in cls.query:
             add_to_index(cls.__tablename__, obj)
 
-
-db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
-db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
+# While Elasticsearch is not running commenting listens
+# db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
+# db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
 
 
 followers = db.Table('followers',
@@ -105,12 +106,12 @@ class User(UserMixin, db.Model):
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
             {'reset_password': self.id, 'exp': time() + expires_in},
-            app.config['SECRET_KEY'], algorithm='HS256').encode('utf-8')
+            current_app.config['SECRET_KEY'], algorithm='HS256').encode('utf-8')
 
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            id = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])['reset_password']
+            id = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])['reset_password']
         except:
             return
         return User.query.get(id)
