@@ -20,3 +20,6 @@ tests.py
 
 # not necessary(can be recreated)
 messages.pot
+
+# ignore chrome driver for browser testing the app
+chromedriver

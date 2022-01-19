@@ -13,22 +13,22 @@ from app.main import bp
 
 @bp.before_request
 def before_request():
-	g.request_start=time.perf_counter()
-	g.request = Request(path=request.path, method=request.method, browser=request.user_agent.browser,
-					platform=request.user_agent.platform)
+	# g.request_start=time.perf_counter()
+	# g.request = Request(path=request.path, method=request.method, browser=request.user_agent.browser,
+	# 				platform=request.user_agent.platform)
 	if current_user.is_authenticated:
-		current_user.last_seen = datetime.utcnow()
-		db.session.commit()
+		# current_user.last_seen = datetime.utcnow()
+		# db.session.commit()
 		g.search_form = SearchForm()
-		g.request.user_id=current_user.id
+		# g.request.user_id=current_user.id
 
-@bp.after_request
-def after_request(response):
-	g.request.status_code=response.status_code
-	g.request.response_time=time.perf_counter() - g.request_start
-	db.session.add(g.request)
-	db.session.commit()
-	return response
+# @bp.after_request
+# def after_request(response):
+# 	g.request.status_code=response.status_code
+# 	g.request.response_time=time.perf_counter() - g.request_start
+# 	db.session.add(g.request)
+# 	db.session.commit()
+# 	return response
 
 
 @bp.route('/')
